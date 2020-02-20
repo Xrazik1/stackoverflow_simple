@@ -29,6 +29,11 @@ gem 'jbuilder', '~> 2.7'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 
+# Boostrap
+gem 'bootstrap', '~> 4.0.0'
+gem 'sassc-rails', '>= 2.1.0'
+gem 'jquery-rails'
+
 # Testing
 gem 'factory_bot'
 gem 'rails-controller-testing'
