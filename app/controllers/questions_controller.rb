@@ -1,7 +1,8 @@
 class QuestionsController < ApplicationController
   expose :question
   expose :questions, -> { Question.all }
-  expose :answers, -> { question.answers }
+  expose :answers,   -> { question.answers }
+  expose :answer,    -> { params[:answer_id] ? Answer.find(params[:id]) : question.answers.new }
 
   def index; end
 
@@ -10,7 +11,7 @@ class QuestionsController < ApplicationController
   def new; end
 
   def create
-    question.save ? redirect_to(questions_path) : render(:new)
+    question.save ? redirect_to(questions_path) : render(:index)
   end
 
   def update
