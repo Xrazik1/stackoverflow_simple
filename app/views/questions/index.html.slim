@@ -1,0 +1,12 @@
+section class='questions'
+  div class='jumbotron m-2'
+    == render 'form'
+  div class='jumbotron m-2'
+    h2 Все вопросы:
+    table class='table'
+      thead
+        tr
+          th scope="col" Вопрос
+          th scope="col"
+      tbody
+        == render questions
