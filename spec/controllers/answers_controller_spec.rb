@@ -5,18 +5,13 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { answer.question }
 
   describe 'POST #create' do
-    it 'renders question show template' do
-      expect(post(:create, params: { question_id: question, answer: attributes_for(:answer) })).to redirect_to question
-    end
-
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
         expect { post(:create, params: { question_id: question, answer: attributes_for(:answer) })}.to change(question.answers, :count).by(1)
       end
 
-      it 'flashes a success message' do
-        post :create, params: { question_id: question, answer: attributes_for(:answer) }
-        expect(response.request.flash[:success]).to_not be_nil
+      it 'redirects to question path' do
+        expect(post(:create, params: { question_id: question, answer: attributes_for(:answer) })).to redirect_to question
       end
     end
 
