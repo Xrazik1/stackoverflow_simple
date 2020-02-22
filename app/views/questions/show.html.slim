@@ -5,6 +5,6 @@ div class='question'
     p #{question.body}
 
 
-  == render question.answers
+  = render question.answers
 
-  == render 'answers/form', answer: answer || locals[:answer]
+  = render 'answers/form', answer: answer || locals[:answer]
