@@ -30,7 +30,7 @@ gem 'jbuilder', '~> 2.7'
 gem 'bootsnap', '>= 1.4.2', require: false
 
 # Boostrap
-gem 'bootstrap', '~> 4.0.0'
+gem 'bootstrap', '~> 4.3.1'
 gem 'sassc-rails', '>= 2.1.0'
 gem 'jquery-rails'
 
