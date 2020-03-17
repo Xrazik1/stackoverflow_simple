@@ -5,6 +5,7 @@ ruby '2.6.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.2', '>= 6.0.2.1'
+gem 'decent_exposure', '3.0.0'
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
@@ -28,7 +29,17 @@ gem 'jbuilder', '~> 2.7'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 
+# Boostrap
+gem 'bootstrap', '~> 4.0.0'
+gem 'sassc-rails', '>= 2.1.0'
+gem 'jquery-rails'
+
+# Testing
 gem 'factory_bot'
+gem 'rails-controller-testing'
+
+# Templates
+gem "slim-rails"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

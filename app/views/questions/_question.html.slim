@@ -1,0 +1,7 @@
+tr
+  th = question.title
+  th = button_to 'Открыть',
+          question_path(question),
+          method: :get,
+          class: 'btn btn-primary'
+
