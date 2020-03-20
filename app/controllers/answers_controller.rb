@@ -1,7 +1,10 @@
 class AnswersController < ApplicationController
-  expose :answer,   -> { Answer.new(answer_params.merge(question_id: question.id)) }
+  before_action :authenticate_user!, except: :index
+
   expose :answers,  -> { Answer.all }
   expose :question, -> { Question.find(params[:question_id] || params[:id]) }
+  expose :answer,   -> { params[:answer] ? user.answers.new(answer_params) : Answer.new }
+  expose :user,     -> { current_user }
 
   def create
     if answer.save
