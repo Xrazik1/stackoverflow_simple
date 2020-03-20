@@ -9,20 +9,23 @@ class AnswersController < ApplicationController
   def create
     if answer.save
       flash[:success] = 'Ответ успешно создан'
-      redirect_to question_path(question)
+      redirect_to question_answers_path
     else
-      render 'questions/show', locals: {answer: answer}
+      render :index
     end
   end
 
-  def update
-    flash.now[:success] = 'Ответ успешно изменён' if answer.update(answer_params)
-    render template: 'questions/show', locals: {answer: answer}
+  def destroy
+    answer = Answer.find(params[:id])
+    answer.destroy
+
+    flash[:success] = 'Ответ успешно удалён'
+    redirect_to question_answers_path(answer.question)
   end
 
   private
 
   def answer_params
-    params.require(:answer).permit(:body, :question_id)
+    params.require(:answer).permit(:body, :question_id).merge(question_id: question.id)
   end
 end

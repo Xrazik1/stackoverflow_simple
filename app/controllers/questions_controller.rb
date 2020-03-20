@@ -7,7 +7,12 @@ class QuestionsController < ApplicationController
   expose :user,      -> { current_user }
 
   def create
-    question.save ? redirect_to(questions_path) : render(:index)
+    if question.save
+      flash[:success] = 'Вопрос успешно создан'
+      redirect_to(questions_path)
+    else
+      render(:index)
+    end
   end
 
   def update
@@ -15,9 +20,13 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    question.destroy
+    Question.find(params[:id]).destroy
+
+    flash[:success] = 'Вопрос успешно удалён'
     redirect_to questions_path
   end
+
+  private
 
   def question_params
     params.require(:question).permit(:title, :body)
