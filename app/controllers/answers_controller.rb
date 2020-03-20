@@ -1,5 +1,6 @@
 class AnswersController < ApplicationController
-  expose :answer,   -> { Answer.new(answer_params.merge(question_id: question.id)) }
+  before_action :authenticate_user!, except: :index
+
   expose :answers,  -> { Answer.all }
   expose :question, -> { Question.find(params[:question_id] || params[:id]) }
 

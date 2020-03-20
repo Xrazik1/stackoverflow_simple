@@ -1,5 +1,7 @@
 class QuestionsController < ApplicationController
-  expose :question
+  before_action :authenticate_user!, except: %i[index show]
+
+  expose :question,  -> { params[:question] ? user.questions.new(question_params) : Question.new }
   expose :questions, -> { Question.all }
   expose :answers,   -> { question.answers }
   expose :answer,    -> { params[:answer_id] ? Answer.find(params[:id]) : question.answers.new }
