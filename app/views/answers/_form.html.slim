@@ -1,9 +1,0 @@
-div class='jumbotron m-5'
-  = form_with model: answer, url: create_new_question_answer_url(question), method: :post, local: true do |form|
-    = render 'shared/errors', resource: answer
-    .form-group
-      p
-        = form.label :body, 'Введите ваш ответ'
-        = form.text_area :body, id: :answer_body, class: 'form-control'
-      p
-        = form.submit 'Создать', class: 'btn btn-primary'
