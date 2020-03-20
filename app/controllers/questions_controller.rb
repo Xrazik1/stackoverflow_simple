@@ -4,13 +4,7 @@ class QuestionsController < ApplicationController
   expose :question,  -> { params[:question] ? user.questions.new(question_params) : Question.new }
   expose :questions, -> { Question.all }
   expose :answers,   -> { question.answers }
-  expose :answer,    -> { params[:answer_id] ? Answer.find(params[:id]) : question.answers.new }
-
-  def index; end
-
-  def show; end
-
-  def new; end
+  expose :user,      -> { current_user }
 
   def create
     question.save ? redirect_to(questions_path) : render(:index)

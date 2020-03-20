@@ -3,6 +3,8 @@ class AnswersController < ApplicationController
 
   expose :answers,  -> { Answer.all }
   expose :question, -> { Question.find(params[:question_id] || params[:id]) }
+  expose :answer,   -> { params[:answer] ? user.answers.new(answer_params) : Answer.new }
+  expose :user,     -> { current_user }
 
   def create
     if answer.save
