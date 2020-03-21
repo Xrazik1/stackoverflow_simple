@@ -20,7 +20,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    Question.find(params[:id]).destroy
+    user.questions.find(params[:id]).destroy
 
     flash[:success] = 'Вопрос успешно удалён'
     redirect_to questions_path

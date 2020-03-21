@@ -16,7 +16,7 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    answer = Answer.find(params[:id])
+    answer = user.answers.find(params[:id])
     answer.destroy
 
     flash[:success] = 'Ответ успешно удалён'
