@@ -9,14 +9,7 @@ feature 'User can create question', "
   describe 'Authenticated user' do
     given(:user) { create(:user) }
 
-    background do
-      visit questions_path
-      click_on 'Войти'
-
-      fill_in 'Email', with: user.email
-      fill_in 'Password', with: user.password
-      click_on 'Log in'
-    end
+    background { login(user) }
 
     scenario 'asks a question' do
       fill_in 'question[title]', with: 'Test question'

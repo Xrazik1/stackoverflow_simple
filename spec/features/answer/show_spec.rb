@@ -6,12 +6,13 @@ feature 'User can read answers', "
 " do
 
   given!(:question) { create(:question) }
-  given!(:answer)   { create(:answer, question: question) }
+  given!(:answers)  { create_list(:answer, 2, question: question) }
 
   scenario 'user can see the list of answers' do
     visit question_answers_path(question)
 
-    expect(page).to have_content answer.body
+    expect(page).to have_content answers.first.body
+    expect(page).to have_content answers.last.body
   end
 end
 

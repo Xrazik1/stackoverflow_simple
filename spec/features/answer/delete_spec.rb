@@ -6,42 +6,27 @@ feature 'User can delete answer', "
   I'd like to be able to delete it
 " do
 
-  given(:user) { create(:user) }
-
-  background do
-    visit questions_path
-    click_on 'Войти'
-
-    fill_in 'Email', with: user.email
-    fill_in 'Password', with: user.password
-    click_on 'Log in'
-
-    fill_in 'question[title]', with: 'Test question'
-    fill_in 'question[body]', with: 'Question text'
-    click_on 'Создать'
-
-    click_on 'Открыть'
-  end
+  given(:user) { create(:user_with_questions) }
+  given(:question) { user.questions.first }
+  given!(:answer) { create(:answer, user: user, question: question) }
 
   describe 'Authenticated user' do
+    background do
+      login(user)
+      visit question_answers_path(question)
+    end
+
     scenario 'deletes an answer' do
-      fill_in 'answer[body]', with: 'Answer text'
-      click_on 'Создать'
       click_on 'Удалить'
 
       expect(page).to have_content 'Ответ успешно удалён'
-      expect(page).to_not have_content 'Answer text'
+      expect(page).to_not have_content answer.body
     end
   end
 
   describe 'Unathenticated user' do
     scenario "cannot delete someone's answer" do
-      fill_in 'answer[body]', with: 'Answer text'
-      click_on 'Создать'
-
-      click_on 'Выйти'
-      visit questions_path
-      click_on 'Открыть'
+      visit question_answers_path(question)
 
       expect(page).to_not have_content 'Удалить'
     end

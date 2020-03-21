@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
+  let(:user) { create(:user_with_questions) }
+  let(:question) { user.questions.first }
 
   describe 'GET #index' do
     before { get :index }
@@ -48,11 +49,7 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let!(:question) { create(:question) }
-    let(:user) { create(:user) }
-
     before { login(user) }
-    before { user.questions << question }
 
     it 'deletes the question' do
       expect { question.destroy }.to change(Question, :count).by(-1)
@@ -63,6 +60,4 @@ RSpec.describe QuestionsController, type: :controller do
       expect(response).to redirect_to questions_path
     end
   end
-
-
 end

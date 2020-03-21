@@ -6,22 +6,13 @@ feature 'User can create answer', "
   I'd like to be able to create the answer
 " do
 
+  given(:user) { create(:user_with_questions) }
+  given(:question) { user.questions.first }
+
   describe 'Authenticated user' do
-    given(:user) { create(:user) }
-
     background do
-      visit questions_path
-      click_on 'Войти'
-
-      fill_in 'Email', with: user.email
-      fill_in 'Password', with: user.password
-      click_on 'Log in'
-
-      fill_in 'question[title]', with: 'Test question'
-      fill_in 'question[body]', with: 'Question text'
-      click_on 'Создать'
-
-      click_on 'Открыть'
+      login(user)
+      visit question_answers_path(question)
     end
 
     scenario 'creates an answer' do
@@ -40,11 +31,7 @@ feature 'User can create answer', "
 
   describe 'Unathenticated user' do
     scenario 'cannot create an answer' do
-      create(:question)
-
-      visit questions_path
-      click_on 'Открыть'
-
+      visit question_answers_path(question)
       expect(page).to_not have_content 'Создать'
     end
   end

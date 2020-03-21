@@ -1,14 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:answer) { create(:answer) }
+  let(:user) { create(:user_with_answers) }
+  let(:answer) { user.answers.first }
   let(:question) { answer.question }
 
+  before { login(user) }
+
   describe 'POST #create' do
-    let(:user) { create(:user) }
-
-    before { login(user) }
-
     context 'with valid attributes' do
       it 'saves a new answer in the database' do
         expect { post(:create, params: { question_id: question, answer: attributes_for(:answer) })}.to change(question.answers, :count).by(1)
@@ -29,6 +28,17 @@ RSpec.describe AnswersController, type: :controller do
       it 'renders index template' do
         expect(response).to render_template :index
       end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    it 'deletes the question' do
+      expect { answer.destroy }.to change(Answer, :count).by(-1)
+    end
+
+    it 'redirects to index' do
+      delete :destroy, params: { id: answer }
+      expect(response).to redirect_to question_answers_path(question)
     end
   end
 end
