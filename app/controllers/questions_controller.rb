@@ -20,9 +20,15 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    user.questions.find(params[:id]).destroy
+    question = Question.find(params[:id])
 
-    flash[:success] = 'Вопрос успешно удалён'
+    if user&.author_of? question
+      question.destroy
+      flash[:success] = 'Вопрос успешно удалён'
+    else
+      flash[:danger] = 'Вы не можете удалить чужой вопрос'
+    end
+
     redirect_to questions_path
   end
 
