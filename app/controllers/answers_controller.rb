@@ -1,8 +1,8 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, except: :index
 
-  expose :answers,  -> { Answer.all }
   expose :question, -> { Question.find(params[:question_id] || params[:id]) }
+  expose :answers,  -> { question.answers }
   expose :answer,   -> { params[:answer] ? user.answers.new(answer_params) : Answer.new }
   expose :user,     -> { current_user }
 
@@ -16,10 +16,15 @@ class AnswersController < ApplicationController
   end
 
   def destroy
-    answer = user.answers.find(params[:id])
-    answer.destroy
+    answer = Answer.find(params[:id])
 
-    flash[:success] = 'Ответ успешно удалён'
+    if user&.author_of? answer
+      answer.destroy
+      flash[:success] = 'Ответ успешно удалён'
+    else
+      flash[:danger] = 'Вы не можете удалить чужой ответ'
+    end
+
     redirect_to question_answers_path(answer.question)
   end
 
