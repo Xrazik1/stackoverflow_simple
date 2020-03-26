@@ -6,11 +6,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  def has_question? question
-    questions.include? question
-  end
-
-  def has_answer? answer
-    answers.include? answer
+  def author_of? object
+    case object.class.name
+    when 'Question'
+      questions.include? object
+    when 'Answer'
+      answers.include? object
+    end
   end
 end

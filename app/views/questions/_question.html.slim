@@ -4,7 +4,7 @@ tr
           question_answers_path(question),
           method: :get,
           class: 'btn btn-primary'
-  - if user&.has_question? question
+  - if user&.author_of? question
     th = button_to 'Удалить',
             question_path(question),
             method: :delete,
