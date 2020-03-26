@@ -21,43 +21,91 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
-    let(:user) { create(:user) }
+    context 'Authenticated user' do
+      let(:user) { create(:user) }
 
-    before { login(user) }
+      before { login(user) }
 
-    context 'with valid attributes' do
-      it 'saves a new question in the database' do
-        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+      context 'with valid attributes' do
+        it 'saves a new question in the database' do
+          expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+        end
+
+        it 'redirects to index view' do
+          post :create, params: { question: attributes_for(:question) }
+          expect(response).to redirect_to assigns(:questions)
+        end
       end
 
-      it 'redirects to index view' do
-        post :create, params: { question: attributes_for(:question) }
-        expect(response).to redirect_to assigns(:questions)
+      context 'with invalid attributes' do
+        it "doesn't save the question" do
+          expect { post :create, params: { question: attributes_for(:question, :invalid) } }.to_not change(Question, :count)
+        end
+
+        it 're-renders new view' do
+          post :create, params: { question: attributes_for(:question, :invalid) }
+          expect(response).to render_template :index
+        end
       end
     end
 
-    context 'with invalid attributes' do
+    context 'Unauthenticated user' do
+      before { post :create, params: { question: attributes_for(:question, :invalid) }  }
+
       it "doesn't save the question" do
-        expect { post :create, params: { question: attributes_for(:question, :invalid) } }.to_not change(Question, :count)
+        expect {response}.to_not change(Question, :count)
       end
 
-      it 're-renders new view' do
-        post :create, params: { question: attributes_for(:question, :invalid) }
-        expect(response).to render_template :index
+      it 'redirects to login path' do
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    before { login(user) }
+    context 'Authenticated user' do
 
-    it 'deletes the question' do
-      expect { question.destroy }.to change(Question, :count).by(-1)
+      before { login(user) }
+
+      context 'Author' do
+        it 'deletes the question' do
+          expect { question.destroy }.to change(Question, :count).by(-1)
+        end
+
+        it 'redirects to index' do
+          delete :destroy, params: { id: question }
+          expect(response).to redirect_to questions_path
+        end
+      end
+
+      context 'Stranger' do
+        let(:another_user) { create(:user) }
+
+        before do
+          delete :destroy, params: { id: question }
+          login(another_user)
+        end
+
+        it 'does not delete the question' do
+          expect{response}.to change(Question, :count).by(0)
+        end
+
+        it 'redirects to index' do
+          expect(response).to redirect_to questions_path
+        end
+      end
+
     end
 
-    it 'redirects to index' do
-      delete :destroy, params: { id: question }
-      expect(response).to redirect_to questions_path
+    context 'Unauthenticated user' do
+      it 'does not delete the question' do
+        expect { question.destroy }.to change(Question, :count).by(0)
+      end
+
+      it 'redirects to login path' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to new_user_session_path
+      end
     end
   end
 end
