@@ -13,14 +13,14 @@ feature 'User can log out', "
     scenario 'tries to log out' do
       click_on 'Выйти'
 
-      expect(page).to_not have_content 'Выйти'
+      expect(page).to_not have_button 'Выйти'
     end
   end
 
   describe 'Unauthenticated user' do
     scenario 'tries to log out' do
       visit questions_path
-      expect(page).to_not have_content 'Выйти'
+      expect(page).to_not have_button 'Выйти'
     end
   end
 end

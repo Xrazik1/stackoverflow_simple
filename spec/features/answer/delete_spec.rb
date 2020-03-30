@@ -13,7 +13,7 @@ feature 'User can delete answer', "
   describe 'Authenticated user' do
     background do
       login(user)
-      visit question_answers_path(question)
+      visit question_path(question)
     end
 
     scenario 'deletes an answer' do
@@ -26,9 +26,9 @@ feature 'User can delete answer', "
 
   describe 'Unathenticated user' do
     scenario "cannot delete someone's answer" do
-      visit question_answers_path(question)
+      visit question_path(question)
 
-      expect(page).to_not have_content 'Удалить'
+      expect(page).to_not have_button 'Удалить'
     end
   end
 end

@@ -1,7 +1,7 @@
 div class='jumbotron m-5'
   = answer.body
 
-  - if user&.author_of? answer
+  - if user&.author_of?(answer)
     = button_to 'Удалить',
                 answer_path(answer),
                 method: :delete,

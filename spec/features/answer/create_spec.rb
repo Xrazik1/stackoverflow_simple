@@ -12,7 +12,7 @@ feature 'User can create answer', "
   describe 'Authenticated user' do
     background do
       login(user)
-      visit question_answers_path(question)
+      visit question_path(question)
     end
 
     scenario 'creates an answer' do
@@ -31,8 +31,8 @@ feature 'User can create answer', "
 
   describe 'Unathenticated user' do
     scenario 'cannot create an answer' do
-      visit question_answers_path(question)
-      expect(page).to_not have_content 'Создать'
+      visit question_path(question)
+      expect(page).to_not have_button 'Создать'
     end
   end
 end

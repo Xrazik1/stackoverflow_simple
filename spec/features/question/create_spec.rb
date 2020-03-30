@@ -29,7 +29,7 @@ feature 'User can create question', "
   describe 'Unathenticated user' do
     scenario 'cannot ask a question' do
       visit questions_path
-      expect(page).to_not have_content 'Создать'
+      expect(page).to_not have_button 'Создать'
     end
   end
 end

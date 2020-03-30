@@ -30,7 +30,7 @@ feature 'User can delete question', "
   describe 'Unathenticated user' do
     scenario "cannot delete someone's question" do
       visit questions_path
-      expect(page).to_not have_content 'Удалить'
+      expect(page).to_not have_button 'Удалить'
     end
   end
 end
