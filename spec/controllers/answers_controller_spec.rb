@@ -24,11 +24,11 @@ RSpec.describe AnswersController, type: :controller do
         before { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) } }
 
         it 'does not save a new answer in the database' do
-          expect{response}.to change(question.answers, :count).by(0)
+          expect{response}.to_not change(question.answers, :count)
         end
 
-        it 'renders index template' do
-          expect(response).to render_template :index
+        it 'renders question show template' do
+          expect(response).to render_template 'questions/show'
         end
       end
     end

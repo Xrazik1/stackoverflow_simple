@@ -87,19 +87,18 @@ RSpec.describe QuestionsController, type: :controller do
         end
 
         it 'does not delete the question' do
-          expect{response}.to change(Question, :count).by(0)
+          expect{response}.to_not change(Question, :count)
         end
 
         it 'redirects to index' do
           expect(response).to redirect_to questions_path
         end
       end
-
     end
 
     context 'Unauthenticated user' do
       it 'does not delete the question' do
-        expect { question.destroy }.to change(Question, :count).by(0)
+        expect { question.destroy }.to_not change(Question, :count)
       end
 
       it 'redirects to login path' do
