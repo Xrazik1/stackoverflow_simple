@@ -12,18 +12,27 @@ feature 'User can delete question', "
   describe 'Authenticated user' do
     background { login(user) }
 
-    scenario 'deletes the question' do
-      click_on 'Удалить'
+    describe 'Author' do
+      scenario 'deletes the question' do
+        click_on 'Удалить'
 
-      expect(page).to have_content 'Вопрос успешно удалён'
-      expect(page).to_not have_content 'Test question'
+        expect(page).to have_content 'Вопрос успешно удалён'
+        expect(page).to_not have_content 'Test question'
+      end
     end
 
-    given(:question) { create(:question) }
+    context 'Stranger' do
+      given(:another_user) { create(:user) }
 
-    scenario "cannot delete someone's question" do
-      visit questions_path
-      expect(page).to_not have_content 'Удалить'
+      background do
+        click_on 'Выйти'
+        login(another_user)
+      end
+
+      scenario "cannot delete someone's question" do
+        visit questions_path
+        expect(page).to_not have_button 'Удалить'
+      end
     end
   end
 

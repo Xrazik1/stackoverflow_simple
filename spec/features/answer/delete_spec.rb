@@ -16,11 +16,27 @@ feature 'User can delete answer', "
       visit question_path(question)
     end
 
-    scenario 'deletes an answer' do
-      click_on 'Удалить'
+    context 'Author' do
+      scenario 'deletes his answer' do
+        click_on 'Удалить'
 
-      expect(page).to have_content 'Ответ успешно удалён'
-      expect(page).to_not have_content answer.body
+        expect(page).to have_content 'Ответ успешно удалён'
+        expect(page).to_not have_content answer.body
+      end
+    end
+
+    context 'Stranger' do
+      given(:another_user) { create(:user) }
+
+      background do
+        click_on 'Выйти'
+        login(another_user)
+      end
+
+      scenario "cannot delete someone's answer" do
+        visit question_path(question)
+        expect(page).to_not have_button 'Удалить'
+      end
     end
   end
 
