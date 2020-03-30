@@ -15,8 +15,13 @@ RSpec.describe AnswersController, type: :controller do
           expect { post(:create, params: { question_id: question, answer: attributes_for(:answer) })}.to change(question.answers, :count).by(1)
         end
 
-        it 'redirects to answers' do
-          expect(post(:create, params: { question_id: question, answer: attributes_for(:answer) })).to redirect_to question_answers_path
+        it "assigns the answer to correct user" do
+          post(:create, params: { question_id: question, answer: attributes_for(:answer) })
+          expect(assigns(:exposed_answer).user_id).to eq user.id
+        end
+
+        it 'redirects to question' do
+          expect(post(:create, params: { question_id: question, answer: attributes_for(:answer) })).to redirect_to question_path(question)
         end
       end
 
@@ -37,7 +42,7 @@ RSpec.describe AnswersController, type: :controller do
       before { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) } }
 
       it 'does not save the answer' do
-        expect{response}.to change(question.answers, :count).by(0)
+        expect{response}.to_not change(question.answers, :count)
       end
 
       it 'redirects to login path' do
@@ -52,12 +57,12 @@ RSpec.describe AnswersController, type: :controller do
       before { login(user) }
 
       context 'Author' do
-        it 'deletes the question' do
+        it 'deletes his question' do
           expect{delete :destroy, params: { id: answer }}.to change(Answer, :count).by(-1)
         end
 
-        it 'redirects to index' do
-          expect(delete :destroy, params: { id: answer }).to redirect_to question_answers_path(question)
+        it 'redirects to question' do
+          expect(delete :destroy, params: { id: answer }).to redirect_to question_path(question)
         end
       end
 
@@ -66,19 +71,19 @@ RSpec.describe AnswersController, type: :controller do
 
         before { login(another_user) }
 
-        it 'does not delete the answer' do
-          expect{delete :destroy, params: { id: answer }}.to change(Answer, :count).by(0)
+        it 'cannot delete the answer' do
+          expect{delete :destroy, params: { id: answer }}.to_not change(Answer, :count)
         end
 
-        it 'redirects to index' do
-          expect(delete :destroy, params: { id: answer }).to redirect_to question_answers_path(question)
+        it 'redirects to question' do
+          expect(delete :destroy, params: { id: answer }).to redirect_to question_path(question)
         end
       end
     end
 
     context 'Unauthenticated user' do
       it 'does not delete the answer' do
-        expect{delete :destroy, params: { id: answer }}.to change(Answer, :count).by(0)
+        expect{delete :destroy, params: { id: answer }}.to_not change(Answer, :count)
       end
 
       it 'redirects to login path' do

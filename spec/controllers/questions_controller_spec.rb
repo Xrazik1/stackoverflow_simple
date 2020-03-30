@@ -31,9 +31,14 @@ RSpec.describe QuestionsController, type: :controller do
           expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
         end
 
+        it "assigns the question to correct user" do
+          post :create, params: { question: attributes_for(:question) }
+          expect(assigns(:exposed_question).user_id).to eq user.id
+        end
+
         it 'redirects to index view' do
           post :create, params: { question: attributes_for(:question) }
-          expect(response).to redirect_to assigns(:questions)
+          expect(response).to redirect_to assigns(:exposed_questions)
         end
       end
 
