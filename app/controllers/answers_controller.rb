@@ -2,11 +2,12 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, except: :index
 
   expose :user,                   ->{ current_user }
-  expose :answer,   build:        ->(answer_params){ user.answers.new(answer_params) },
-                    build_params: ->{ answer_params.merge({ question: question }) }
+  expose :answer,   build:        ->(answer_params){ user.answers.new(answer_params) }
   expose :question
 
   def create
+    answer.question = question
+
     if answer.save
       flash[:success] = 'Ответ успешно создан'
       redirect_to question_path question
