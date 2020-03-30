@@ -1,17 +1,17 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
 
-  expose :question,  -> { params[:question] ? user.questions.new(question_params) : Question.new }
-  expose :questions, -> { Question.all }
-  expose :answers,   -> { question.answers }
-  expose :user,      -> { current_user }
+  expose :questions,       ->{ Question.all }
+  expose :user,            ->{ current_user }
+  expose :answer,   build: ->(answer_params){ user.answers.new(answer_params) }, id: :answer_id
+  expose :question, build: ->(question_params){ user.questions.new(question_params) }
 
   def create
     if question.save
       flash[:success] = 'Вопрос успешно создан'
-      redirect_to(questions_path)
+      redirect_to questions_path
     else
-      render(:index)
+      render :index
     end
   end
 
@@ -20,9 +20,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    question = Question.find(params[:id])
-
-    if user&.author_of? question
+    if user&.author_of?(question)
       question.destroy
       flash[:success] = 'Вопрос успешно удалён'
     else

@@ -1,36 +1,34 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!, except: :index
 
-  expose :question, -> { Question.find(params[:question_id] || params[:id]) }
-  expose :answers,  -> { question.answers }
-  expose :answer,   -> { params[:answer] ? user.answers.new(answer_params) : Answer.new }
-  expose :user,     -> { current_user }
+  expose :user,                   ->{ current_user }
+  expose :answer,   build:        ->(answer_params){ user.answers.new(answer_params) },
+                    build_params: ->{ answer_params.merge({ question: question }) }
+  expose :question
 
   def create
     if answer.save
       flash[:success] = 'Ответ успешно создан'
-      redirect_to question_answers_path
+      redirect_to question_path question
     else
-      render :index
+      render 'questions/show'
     end
   end
 
   def destroy
-    answer = Answer.find(params[:id])
-
-    if user&.author_of? answer
+    if user&.author_of?(answer)
       answer.destroy
       flash[:success] = 'Ответ успешно удалён'
     else
       flash[:danger] = 'Вы не можете удалить чужой ответ'
     end
 
-    redirect_to question_answers_path(answer.question)
+    redirect_to question_path answer.question
   end
 
   private
 
   def answer_params
-    params.require(:answer).permit(:body, :question_id).merge(question_id: question.id)
+    params.require(:answer).permit(:body, :question_id)
   end
 end
