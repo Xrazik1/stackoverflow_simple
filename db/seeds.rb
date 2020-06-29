@@ -1,4 +1,8 @@
-puts 'seeds already loaded'; return if Question.any? || Answer.any?
+if Question.any? || Answer.any?
+  puts 'seeds already loaded'
+  return
+end
+
 
 user = User.create!(email: 'kolja-savelev@mail.ru', password: '123456')
 

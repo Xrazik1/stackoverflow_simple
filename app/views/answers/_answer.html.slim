@@ -1,2 +1,8 @@
-div class='jumbotron m-5 bg-info' #{answer.body}
-hr class="my-3"
+div class='jumbotron m-5'
+  = answer.body
+
+  - if user&.author_of?(answer)
+    = button_to 'Удалить',
+                answer_path(answer),
+                method: :delete,
+                class: 'btn btn-danger'

@@ -1,6 +1,26 @@
 header
-  nav class='navbar navbar-light bg-light'
+  nav class='navbar navbar-expand-lg navbar-light bg-light'
     a class='navbar-brand' href='#' StackoverflowSimple
-    div class='navbar-nav'
-      a class='nav-item nav-link' href="#{questions_path}" Вопросы
+    - if user_signed_in?
+      span class='navbar-text' Добро пожаловать, #{current_user.email} |
+    div class='collapse navbar-collapse'
+      ul class='navbar-nav'
+        li class='nav-item'
+          a
+            = link_to 'Вопросы', questions_path, class: 'nav-link'
+        li class='nav-item'
+        - if user_signed_in?
+          li class='nav-item'
+            a
+              = link_to 'Выйти', destroy_user_session_path, method: :delete, class: 'nav-link'
+        - else
+          li class='nav-item'
+            a
+              = link_to 'Войти', new_user_session_path, class: 'nav-link'
+          li class='nav-item'
+            a
+              = link_to 'Регистрация', new_user_registration_path, class: 'nav-link'
 
+
+- flash.each do |key, value|
+  div class="alert alert-#{ key }"#{ value }

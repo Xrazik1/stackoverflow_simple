@@ -1,6 +1,7 @@
 section class='questions'
-  div class='jumbotron m-2'
-    = render 'form'
+  - if user_signed_in?
+    div class='jumbotron m-2'
+      = render 'form'
   div class='jumbotron m-2'
     h2 Все вопросы:
     table class='table'

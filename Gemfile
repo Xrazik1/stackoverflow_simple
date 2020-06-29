@@ -8,7 +8,7 @@ gem 'devise'
 gem 'rails', '~> 6.0.2', '>= 6.0.2.1'
 gem 'decent_exposure', '3.0.0'
 # Use postgresql as the database for Active Record
-gem 'pg', '>= 0.18', '< 2.0'
+gem 'pg'
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets
