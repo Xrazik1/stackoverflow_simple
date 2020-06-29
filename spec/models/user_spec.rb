@@ -9,7 +9,6 @@ RSpec.describe User, type: :model do
   describe 'authors checking method' do
     let(:user) { create(:user) }
     let(:question) { create(:question, user: user) }
-    let(:answer) { create(:answer, user: user) }
 
     it 'checks that a question belongs to user' do
       expect(user).to be_author_of(question)
@@ -17,14 +16,6 @@ RSpec.describe User, type: :model do
 
     it 'checks that a question does not belong to user' do
       expect(user).to_not be_author_of(create(:question))
-    end
-
-    it 'checks that an answer belongs to user' do
-      expect(user).to be_author_of(answer)
-    end
-
-    it 'checks that a question does not belong to user' do
-      expect(user).to_not be_author_of(create(:answer))
     end
   end
 end
