@@ -4,6 +4,7 @@ RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question, user: user) }
   let!(:answer) { create(:answer, user: user, question: question) }
+  let(:answers) { create_list(:answer, 2, question: question) }
 
   describe 'POST #create' do
     context 'Authenticated user' do
@@ -12,28 +13,28 @@ RSpec.describe AnswersController, type: :controller do
 
       context 'with valid attributes' do
         it 'saves a new answer in the database' do
-          expect { post(:create, params: { question_id: question, answer: attributes_for(:answer) })}.to change(question.answers, :count).by(1)
+          expect { post(:create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js)}.to change(question.answers, :count).by(1)
         end
 
         it "assigns the answer to correct user" do
-          post(:create, params: { question_id: question, answer: attributes_for(:answer) })
+          post(:create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js)
           expect(assigns(:exposed_answer).user_id).to eq user.id
         end
 
-        it 'redirects to question' do
-          expect(post(:create, params: { question_id: question, answer: attributes_for(:answer) })).to redirect_to question_path(question)
+        it 'renders create template' do
+          expect(post(:create, params: { question_id: question, answer: attributes_for(:answer) }, format: :js)).to render_template :create
         end
       end
 
       context 'with invalid attributes' do
-        before { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) } }
+        before { post :create, params: { question_id: question, answer: attributes_for(:answer, :invalid) }, format: :js }
 
         it 'does not save a new answer in the database' do
           expect{response}.to_not change(question.answers, :count)
         end
 
-        it 'renders question show template' do
-          expect(response).to render_template 'questions/show'
+        it 'renders create template' do
+          expect(response).to render_template :create
         end
       end
     end
@@ -58,11 +59,7 @@ RSpec.describe AnswersController, type: :controller do
 
       context 'Author' do
         it 'deletes his question' do
-          expect{delete :destroy, params: { id: answer }}.to change(Answer, :count).by(-1)
-        end
-
-        it 'redirects to question' do
-          expect(delete :destroy, params: { id: answer }).to redirect_to question_path(question)
+          expect{delete :destroy, params: { id: answer }, format: :js}.to change(Answer, :count).by(-1)
         end
       end
 
@@ -72,11 +69,7 @@ RSpec.describe AnswersController, type: :controller do
         before { login(another_user) }
 
         it 'cannot delete the answer' do
-          expect{delete :destroy, params: { id: answer }}.to_not change(Answer, :count)
-        end
-
-        it 'redirects to question' do
-          expect(delete :destroy, params: { id: answer }).to redirect_to question_path(question)
+          expect{delete :destroy, params: { id: answer }, format: :js}.to_not change(Answer, :count)
         end
       end
     end
