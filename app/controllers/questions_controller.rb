@@ -16,7 +16,9 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    question.update(question_params) ? redirect_to(question_path(question)) : render(:edit)
+    if user&.author_of?(question)
+      question.update(question_params)
+    end
   end
 
   def destroy
