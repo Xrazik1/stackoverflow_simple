@@ -91,4 +91,65 @@ RSpec.describe AnswersController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #update' do
+    before{ login(user) }
+
+    context 'with valid attributes' do
+      it 'changes answer attributes' do
+        patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
+        answer.reload
+        expect(answer.body).to eq 'new body'
+      end
+
+      it 'renders update view' do
+        expect(patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js).to render_template :update
+      end
+    end
+
+    context 'with invalid attributes' do
+      it 'doesnt change answer attributes' do
+        expect do
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        end.to_not change(answer, :body)
+      end
+
+      it 'renders update view' do
+        patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+        expect(response).to render_template :update
+      end
+    end
+  end
+
+
+  describe 'PATCH #set_best_answer' do
+    before{ login(user) }
+
+    context 'with valid attributes' do
+      it 'saves best answer' do
+        patch :set_best_answer, params: { id: answer, answer: { best_flag: true } }, format: :js
+        answer.reload
+        expect(answer.best_flag).to be_truthy
+      end
+
+      it 'renders set_best_answer view' do
+        expect(patch :set_best_answer, params: { id: answer, answer: { best_flag: true } }, format: :js).to render_template :set_best_answer
+      end
+    end
+
+    context 'with invalid attributes' do
+      it 'doesnt change best answer if best_flag is nil' do
+        expect do
+          patch :set_best_answer, params: { id: answer, answer: { best_flag: nil } }, format: :js
+        end.to_not change(answer, :best_flag)
+      end
+
+      it 'doesnt save more than one best answer' do
+        patch :set_best_answer, params: { id: answers.first, answer: { best_flag: true } }, format: :js
+        patch :set_best_answer, params: { id: answers.last, answer: { best_flag: true } }, format: :js
+
+        expect(answers.last.best_flag).to be_falsey
+      end
+    end
+  end
 end

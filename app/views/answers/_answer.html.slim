@@ -1,4 +1,14 @@
-div class='jumbotron m-5'
+div class='jumbotron m-5 bg-info' id="answer-#{answer.id}"
+  .best-flag
+    - if answer.best_flag
+      span style="color: yellow" Лучший ответ
+    - else
+      - if user&.author_of?(answer)
+        = link_to 'Выбрать ответ как лучший',
+                  set_best_answer_path(answer),
+                  method: :patch,
+                  style: "color: blue",
+                  remote: true
   = answer.body
 
   - if user&.author_of?(answer)
