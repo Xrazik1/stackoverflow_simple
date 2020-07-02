@@ -10,4 +10,4 @@ section class='questions'
           th scope="col" Вопрос
           th scope="col"
       tbody
-        = render questions
+        = render partial: "question_inline", collection: questions, as: :question

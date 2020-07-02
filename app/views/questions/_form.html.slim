@@ -4,9 +4,9 @@ div class='jumbotron-fluid'
     .form-group
       p
         = form.label :title, 'Название'
-        = form.text_area :title, id: :answer_title, class: 'form-control'
+        = form.text_area :title, id: :question_title, class: 'form-control'
       p
         = form.label :body, 'Содержание'
-        = form.text_area :body, id: :answer_body, class: 'form-control'
+        = form.text_area :body, id: :question_body, class: 'form-control'
       p
         = form.submit 'Создать', class: 'btn btn-primary'
