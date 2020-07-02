@@ -1,0 +1,12 @@
+tr
+  th = question.title
+  th = button_to 'Открыть',
+          question_path(question),
+          method: :get,
+          class: 'btn btn-primary'
+  - if user&.author_of?(question)
+    th = button_to 'Удалить',
+            question_path(question),
+            method: :delete,
+            class: 'btn btn-danger'
+
