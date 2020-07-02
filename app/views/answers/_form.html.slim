@@ -1,6 +1,5 @@
 div class='jumbotron m-5'
-  = form_with model: answer, url: question_answers_path(question), method: :post, local: true do |form|
-    = render 'shared/errors', resource: answer
+  = form_with model: answer, url: question_answers_path(question), method: :post, class: 'new_answer' do |form|
     .form-group
       p
         = form.label :body, 'Введите ваш ответ'

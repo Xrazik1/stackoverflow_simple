@@ -12,7 +12,20 @@ div class='jumbotron m-5 bg-info' id="answer-#{answer.id}"
   = answer.body
 
   - if user&.author_of?(answer)
-    = button_to 'Удалить',
+    = link_to 'Удалить',
                 answer_path(answer),
                 method: :delete,
-                class: 'btn btn-danger'
+                class: 'btn btn-danger delete-answer-btn',
+                data: { answer_id: answer.id },
+                remote: true
+    = link_to 'Edit', '#',
+                class: 'btn btn-info edit-answer-btn',
+                data: { answer_id: answer.id }
+
+    = form_with model: answer,
+                class: "hidden edit_answer",
+                html: { id: "edit-answer-#{answer.id}" } do |f|
+      .form-group
+        = f.label :body, 'Your answer'
+        = f.text_area :body, id: :answer_body, class: 'form-control'
+        = f.submit 'Save'
