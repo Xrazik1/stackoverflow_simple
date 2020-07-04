@@ -18,7 +18,7 @@ class Answer < ApplicationRecord
 
   def best_flag_constraint_validation
     if question
-      errors.add(:base, 'Only one best flag can be truthy') if ([] << question.answers.find_by(best_flag: true)).length > 1
+      errors.add(:base, 'Only one best flag can be truthy') if question.answers.select(:best_flag).where(best_flag: true).count > 1
     end
   end
 end
