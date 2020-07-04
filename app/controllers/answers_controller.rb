@@ -24,9 +24,12 @@ class AnswersController < ApplicationController
     end
   end
 
-  def set_best_answer
+  def set_best
     @question = answer.question
-    answer.make_best
+
+    if user&.author_of?(@question)
+      answer.make_best
+    end
   end
 
   private
