@@ -113,33 +113,54 @@ RSpec.describe QuestionsController, type: :controller do
     end
   end
 
-
-
   describe 'PATCH #update' do
-    before{ login(user) }
+    context 'Authenticated user' do
+      before { login(user) }
 
-    context 'with valid attributes' do
-      it 'changes question attributes' do
-        patch :update, params: { id: question, question: { body: 'new body' } }, format: :js
-        question.reload
-        expect(question.body).to eq 'new body'
+      context 'Author' do
+        context 'with valid attributes' do
+          it 'changes question attributes' do
+            patch :update, params: { id: question, question: { body: 'new body' } }, format: :js
+            question.reload
+            expect(question.body).to eq 'new body'
+          end
+
+          it 'renders update view' do
+            expect(patch :update, params: { id: question, question: { body: 'new body' } }, format: :js).to render_template :update
+          end
+        end
+
+        context 'with invalid attributes' do
+          it 'cannot change question attributes' do
+            expect do
+              patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+            end.to_not change(question, :body)
+          end
+
+          it 'renders update view' do
+            patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+            expect(response).to render_template :update
+          end
+        end
       end
 
-      it 'renders update view' do
-        expect(patch :update, params: { id: question, question: { body: 'new body' } }, format: :js).to render_template :update
+      context 'Stranger' do
+        let(:another_user) { create(:user) }
+        before { login(another_user) }
+
+        it 'cannot change the question' do
+          expect do
+            patch :update, params: { id: question, question: {body: 'new body'} }, format: :js
+          end.to_not change(question, :body)
+        end
       end
     end
 
-    context 'with invalid attributes' do
-      it 'doesnt change question attributes' do
+    context 'Unauthenticated user' do
+      it 'cannot change the question' do
         expect do
-          patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+          patch :update, params: { id: question, question: {body: 'new body'} }, format: :js
         end.to_not change(question, :body)
-      end
-
-      it 'renders update view' do
-        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
-        expect(response).to render_template :update
       end
     end
   end
