@@ -8,19 +8,11 @@ class Answer < ApplicationRecord
   scope :by_best, -> { order(best_flag: :desc) }
 
   def make_best
-    best_answers = ([] << question.answers.find_by(best_flag: true)).compact
-
-    puts best_answers
-
-    if best_answers
-      best_answers.each do |answer|
-        answer.best_flag = false
-        answer.save
-      end
+    ActiveRecord::Base.transaction do
+      question.answers.where(best_flag: true).update_all(best_flag: false)
+      self.update!(best_flag: true)
     end
 
-    self.best_flag = true
-    self.save
     self
   end
 
