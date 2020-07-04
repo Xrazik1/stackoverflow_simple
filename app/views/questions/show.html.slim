@@ -2,7 +2,7 @@
 .question
   = render question
 .answers
-  = render question.answers_by_best
+  = render question.answers.by_best
 
 .answer-errors
 - if user_signed_in?
