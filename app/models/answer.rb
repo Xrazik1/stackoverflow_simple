@@ -5,6 +5,8 @@ class Answer < ApplicationRecord
   validates :body, presence: true
   validate :best_flag_constraint_validation
 
+  scope :by_best, -> { order(best_flag: :desc) }
+
   def make_best
     best_answers = ([] << question.answers.find_by(best_flag: true)).compact
 
