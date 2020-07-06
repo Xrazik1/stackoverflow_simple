@@ -71,6 +71,11 @@ RSpec.describe AnswersController, type: :controller do
         it 'cannot delete the answer' do
           expect{delete :destroy, params: { id: answer }, format: :js}.to_not change(Answer, :count)
         end
+
+        it 'renders destroy view with alerts' do
+          patch :destroy, params: { id: answer }, format: :js
+          expect(response).to render_template :update
+        end
       end
     end
 
@@ -125,6 +130,11 @@ RSpec.describe AnswersController, type: :controller do
             patch :update, params: { id: answer, answer: {body: 'new body'} }, format: :js
           end.to_not change(answer, :body)
         end
+
+        it 'renders update view with alerts' do
+          patch :update, params: { id: answer, answer: attributes_for(:answer, :invalid) }, format: :js
+          expect(response).to render_template :update
+        end
       end
     end
 
@@ -144,7 +154,7 @@ RSpec.describe AnswersController, type: :controller do
       it 'sets best answer' do
         patch :set_best, params: { id: answer }, format: :js
         answer.reload
-        expect(answer.best_flag).to be_truthy
+        expect(answer.best?).to be_truthy
       end
 
       it 'renders set_best view' do
@@ -155,7 +165,7 @@ RSpec.describe AnswersController, type: :controller do
         patch :set_best, params: { id: answers.first }, format: :js
         patch :set_best, params: { id: answers.last }, format: :js
 
-        expect(answers.last.best_flag).to be_falsey
+        expect(answers.last.best?).to be_falsey
       end
     end
 
@@ -166,7 +176,11 @@ RSpec.describe AnswersController, type: :controller do
       it 'cannot set best answer' do
         patch :set_best, params: { id: answer }, format: :js
         answer.reload
-        expect(answer.best_flag).to be_falsey
+        expect(answer.best?).to be_falsey
+      end
+
+      it 'renders set_best view with alerts' do
+        expect(patch :set_best, params: { id: answer }, format: :js).to render_template :set_best
       end
     end
   end

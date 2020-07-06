@@ -153,6 +153,11 @@ RSpec.describe QuestionsController, type: :controller do
             patch :update, params: { id: question, question: {body: 'new body'} }, format: :js
           end.to_not change(question, :body)
         end
+
+        it 'renders update view with alerts' do
+          patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+          expect(response).to render_template :update
+        end
       end
     end
 
@@ -161,6 +166,11 @@ RSpec.describe QuestionsController, type: :controller do
         expect do
           patch :update, params: { id: question, question: {body: 'new body'} }, format: :js
         end.to_not change(question, :body)
+      end
+
+      it 'renders update view with alerts' do
+        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
+        expect(response).to render_template :update
       end
     end
   end

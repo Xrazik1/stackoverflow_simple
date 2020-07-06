@@ -32,7 +32,6 @@ feature 'User can edit his answer', "
 
           expect(page).to_not have_content answer.body
           expect(page).to have_content 'edited answer'
-          expect(page.find(".edit_answer")[:class].include?("hidden")).to be_truthy
         end
       end
 
