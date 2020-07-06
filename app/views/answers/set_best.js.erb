@@ -1,2 +1,6 @@
-document.querySelector(".answers").innerHTML = ('beforeend', '<%= j render @question.answers.by_best %>');
+document.querySelector(".flashes")
+    .innerHTML = '<%= render 'shared/flash' %>';
 
+<% if user&.author_of?(@question) %>
+  document.querySelector(".answers").innerHTML = '<%= j render @question.answers.by_best %>';
+<% end %>
