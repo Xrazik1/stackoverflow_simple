@@ -1,6 +1,6 @@
 div class='jumbotron m-5 bg-info' id="answer-#{answer.id}"
   .best-flag
-    - if answer.best_flag
+    - if answer.best?
       span style="color: yellow" Лучший ответ
     - else
       - if user&.author_of?(answer.question)
