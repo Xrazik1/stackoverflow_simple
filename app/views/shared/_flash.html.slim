@@ -1,2 +1,4 @@
 - flash.each do |key, message|
-  = content_tag :p, message, class: "flash #{key}"
+  = content_tag :div, class: "flash #{key}" do
+    ul.list-group
+      .notify.bar-top.do-show data-notification-status="#{key}" = message

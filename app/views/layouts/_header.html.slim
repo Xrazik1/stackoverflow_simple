@@ -1,4 +1,7 @@
 header
+  .flashes
+  .errors
+
   nav class='navbar navbar-expand-lg navbar-light bg-light'
     a class='navbar-brand' href='#' StackoverflowSimple
     - if user_signed_in?
@@ -20,7 +23,3 @@ header
           li class='nav-item'
             a
               = link_to 'Регистрация', new_user_registration_path, class: 'nav-link'
-
-
-- flash.each do |key, value|
-  div class="alert alert-#{ key }"#{ value }
