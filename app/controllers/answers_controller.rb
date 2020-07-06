@@ -14,6 +14,10 @@ class AnswersController < ApplicationController
     if user&.author_of?(answer)
       @question = answer.question
       answer.update(answer_params)
+
+      flash[:success] = "Ответ успешно изменён"
+    else
+      flash[:error] = "Вы не можете изменить чужой ответ"
     end
   end
 
@@ -21,6 +25,10 @@ class AnswersController < ApplicationController
     if user&.author_of?(answer)
       @question = answer.question
       answer.destroy
+
+      flash[:success] = "Ответ успешно удалён"
+    else
+      flash[:error] = "Вы не можете удалить чужой ответ"
     end
   end
 
@@ -29,6 +37,8 @@ class AnswersController < ApplicationController
 
     if user&.author_of?(@question)
       answer.make_best
+    else
+      flash[:error] = "Вы не можете сделать лучшим чужой ответ"
     end
   end
 

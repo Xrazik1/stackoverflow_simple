@@ -18,6 +18,9 @@ class QuestionsController < ApplicationController
   def update
     if user&.author_of?(question)
       question.update(question_params)
+      flash[:success] = 'Вопрос успешно изменён'
+    else
+      flash[:error] = 'Вы не можете изменить чужой ответ'
     end
   end
 
