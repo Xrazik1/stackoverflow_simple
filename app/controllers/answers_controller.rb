@@ -7,29 +7,44 @@ class AnswersController < ApplicationController
 
   def create
     answer.question = question
+    answer.save
+  end
 
-    if answer.save
-      flash[:success] = 'Ответ успешно создан'
-      redirect_to question_path question
+  def update
+    if user&.author_of?(answer)
+      @question = answer.question
+      answer.update(answer_params)
+
+      flash[:success] = "Ответ успешно изменён"
     else
-      render 'questions/show'
+      flash[:error] = "Вы не можете изменить чужой ответ"
     end
   end
 
   def destroy
     if user&.author_of?(answer)
+      @question = answer.question
       answer.destroy
-      flash[:success] = 'Ответ успешно удалён'
-    else
-      flash[:danger] = 'Вы не можете удалить чужой ответ'
-    end
 
-    redirect_to question_path answer.question
+      flash[:success] = "Ответ успешно удалён"
+    else
+      flash[:error] = "Вы не можете удалить чужой ответ"
+    end
+  end
+
+  def set_best
+    @question = answer.question
+
+    if user&.author_of?(@question)
+      answer.make_best
+    else
+      flash[:error] = "Вы не можете сделать лучшим чужой ответ"
+    end
   end
 
   private
 
   def answer_params
-    params.require(:answer).permit(:body, :question_id)
+    params.require(:answer).permit(:body)
   end
 end

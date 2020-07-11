@@ -1,0 +1,5 @@
+document.querySelector(".flashes")
+    .innerHTML = '<%= render 'shared/flash' %>';
+<% if user&.author_of?(answer) %>
+  document.querySelector(`#answer-${<%= answer.id %>}`).remove()
+<% end %>

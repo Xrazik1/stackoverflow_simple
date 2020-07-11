@@ -1,12 +1,19 @@
-tr
-  th = question.title
-  th = button_to 'Открыть',
-          question_path(question),
-          method: :get,
-          class: 'btn btn-primary'
-  - if user&.author_of?(question)
-    th = button_to 'Удалить',
-            question_path(question),
-            method: :delete,
-            class: 'btn btn-danger'
+div class='jumbotron m-2 bg-primary'
+  h2 class='display-5' Вопрос: #{question.title}
+  hr class="my-4"
+  p #{question.body}
 
+  - if user&.author_of?(question)
+    = link_to 'Edit', '#',
+            class: 'btn btn-info edit-question-btn',
+            data: { question_id: question.id }
+
+    = form_with model: question,
+                class: "hidden edit_question",
+                html: {id: "edit-question-#{question.id}"} do |f|
+      .form-group
+        = f.label :title, 'Question title'
+        = f.text_area :title, id: :question_title, class: 'form-control'
+        = f.label :body, 'Question body'
+        = f.text_area :body, id: :question_body, class: 'form-control'
+        = f.submit 'Save'

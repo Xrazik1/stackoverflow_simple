@@ -1,10 +1,7 @@
-div class='questions'
-  div class='jumbotron m-2'
-    h2 class='display-5' Вопрос: #{question.title}
-    hr class="my-4"
-    p #{question.body}
+.question
+  = render question
+.answers
+  = render question.answers.by_best
 
-  = render question.answers
-
-  - if user_signed_in?
-    = render 'answers/form'
+- if user_signed_in?
+  = render 'answers/form'

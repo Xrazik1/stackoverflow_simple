@@ -17,25 +17,10 @@ feature 'User can delete answer', "
     end
 
     context 'Author' do
-      scenario 'deletes his answer' do
+      scenario 'deletes his answer', js: true do
         click_on 'Удалить'
 
-        expect(page).to have_content 'Ответ успешно удалён'
         expect(page).to_not have_content answer.body
-      end
-    end
-
-    context 'Stranger' do
-      given(:another_user) { create(:user) }
-
-      background do
-        click_on 'Выйти'
-        login(another_user)
-      end
-
-      scenario "cannot delete someone's answer" do
-        visit question_path(question)
-        expect(page).to_not have_button 'Удалить'
       end
     end
   end
@@ -44,6 +29,16 @@ feature 'User can delete answer', "
     scenario "cannot delete someone's answer" do
       visit question_path(question)
 
+      expect(page).to_not have_button 'Удалить'
+    end
+  end
+
+  describe 'Stranger' do
+    given(:stranger) { create(:user) }
+
+    scenario "cannot delete someone's answer", js: true do
+      login(stranger)
+      visit question_path(question)
       expect(page).to_not have_button 'Удалить'
     end
   end
