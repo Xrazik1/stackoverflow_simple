@@ -1,12 +1,16 @@
 document.addEventListener('turbolinks:load', () => {
-    document.querySelector('.answers').addEventListener('click', (e) => {
-        if (e.target.closest('.edit-answer-btn')) {
-            e.preventDefault();
+    let answers = document.querySelector('.answers');
 
-            let answerId = e.target.dataset.answerId;
+    if(answers) {
+        answers.addEventListener('click', (e) => {
+            if (e.target.closest('.edit-answer-btn')) {
+                e.preventDefault();
 
-            e.target.classList.add('hidden');
-            document.querySelector("form#edit-answer-" + answerId).classList.remove('hidden')
-        }
-    });
+                let answerId = e.target.dataset.answerId;
+
+                e.target.classList.add('hidden');
+                document.querySelector("form#edit-answer-" + answerId).classList.remove('hidden')
+            }
+        });
+    }
 });

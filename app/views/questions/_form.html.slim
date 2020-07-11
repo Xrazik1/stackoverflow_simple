@@ -9,4 +9,7 @@ div class='jumbotron-fluid'
         = form.label :body, 'Содержание'
         = form.text_area :body, id: :question_body, class: 'form-control'
       p
+        = form.label :files, 'Файлы'
+        = form.file_field :files, id: :question_files, multiple: true, class: 'form-control'
+      p
         = form.submit 'Создать', class: 'btn btn-primary'

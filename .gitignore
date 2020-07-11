@@ -31,4 +31,6 @@
 yarn-debug.log*
 .yarn-integrity
 
+/config/secrets/*
+
 .idea

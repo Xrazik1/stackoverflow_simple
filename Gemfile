@@ -39,6 +39,8 @@ gem 'jquery-rails'
 gem 'factory_bot'
 gem 'rails-controller-testing'
 
+gem "google-cloud-storage", "~> 1.8", require: false
+
 # Templates
 gem "slim-rails"
 

@@ -5,4 +5,7 @@ div class='jumbotron m-5'
         = form.label :body, 'Введите ваш ответ'
         = form.text_area :body, id: :answer_body, class: 'form-control'
       p
+        = form.label :files, 'Файлы'
+        = form.file_field :files, id: :answer_files, multiple: true, class: 'form-control'
+      p
         = form.submit 'Создать', class: 'btn btn-primary'

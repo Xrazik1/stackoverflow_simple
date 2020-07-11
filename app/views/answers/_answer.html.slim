@@ -1,4 +1,4 @@
-div class='jumbotron m-5 bg-info' id="answer-#{answer.id}"
+div class='jumbotron m-5 bg-info answer' id="answer-#{answer.id}"
   .best-flag
     - if answer.best?
       span style="color: yellow" Лучший ответ
@@ -9,6 +9,17 @@ div class='jumbotron m-5 bg-info' id="answer-#{answer.id}"
                   method: :patch,
                   style: "color: blue",
                   remote: true
+  - if answer.files.attached?
+    .attachments
+      - answer.files.each do |file|
+        p= link_to file.filename.to_s, url_for(file)
+
+        - if user&.author_of?(answer)
+          = link_to 'Удалить',
+                  attachment_path(file),
+                  method: :delete,
+                  class: 'btn btn-danger'
+
   = answer.body
 
   - if user&.author_of?(answer)
@@ -28,4 +39,6 @@ div class='jumbotron m-5 bg-info' id="answer-#{answer.id}"
       .form-group
         = f.label :body, 'Your answer'
         = f.text_area :body, id: :answer_body, class: 'form-control'
+        = f.label :files, 'Файлы'
+        = f.file_field :files, id: :answer_files, multiple: true, class: 'form-control'
         = f.submit 'Save'

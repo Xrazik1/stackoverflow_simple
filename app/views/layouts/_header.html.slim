@@ -23,3 +23,5 @@ header
           li class='nav-item'
             a
               = link_to 'Регистрация', new_user_registration_path, class: 'nav-link'
+- flash.each do |key, value|
+  div class="alert alert-#{ key }"#{ value }
