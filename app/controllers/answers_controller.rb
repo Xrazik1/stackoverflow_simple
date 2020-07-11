@@ -2,7 +2,8 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!, except: :index
 
   expose :user,                   ->{ current_user }
-  expose :answer,   build:        ->(answer_params){ user.answers.new(answer_params) }
+  expose :answer, find: ->(id, scope){ scope.with_attached_files.find(id) },
+                  build:        ->(answer_params){ user.answers.new(answer_params) }
   expose :question
 
   def create
@@ -13,7 +14,13 @@ class AnswersController < ApplicationController
   def update
     if user&.author_of?(answer)
       @question = answer.question
-      answer.update(answer_params)
+
+      if answer.files
+        answer.files.attach(answer_params[:files])
+        answer.update(answer_params.except(:files))
+      else
+        answer.update(answer_params)
+      end
 
       flash[:success] = "Ответ успешно изменён"
     else
@@ -45,6 +52,6 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 end

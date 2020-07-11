@@ -73,8 +73,8 @@ RSpec.describe AnswersController, type: :controller do
         end
 
         it 'renders destroy view with alerts' do
-          patch :destroy, params: { id: answer }, format: :js
-          expect(response).to render_template :update
+          delete :destroy, params: { id: answer }, format: :js
+          expect(response).to render_template :destroy
         end
       end
     end
@@ -100,6 +100,17 @@ RSpec.describe AnswersController, type: :controller do
             patch :update, params: { id: answer, answer: { body: 'new body' } }, format: :js
             answer.reload
             expect(answer.body).to eq 'new body'
+          end
+
+          it 'appends files to the answer' do
+            patch :update, params: { id: answer, answer: {
+                files: [fixture_file_upload("#{Rails.root}/spec/rails_helper.rb")] }
+            }, format: :js
+            patch :update, params: { id: answer, answer: {
+                files: [fixture_file_upload("#{Rails.root}/spec/spec_helper.rb")] }
+            }, format: :js
+
+            expect(answer.files.count).to eq 2
           end
 
           it 'renders update view' do
