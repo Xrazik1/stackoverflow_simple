@@ -87,8 +87,8 @@ RSpec.describe QuestionsController, type: :controller do
         let(:another_user) { create(:user) }
 
         before do
-          delete :destroy, params: { id: question }
           login(another_user)
+          delete :destroy, params: { id: question }
         end
 
         it 'does not delete the question' do
@@ -123,6 +123,17 @@ RSpec.describe QuestionsController, type: :controller do
             patch :update, params: { id: question, question: { body: 'new body' } }, format: :js
             question.reload
             expect(question.body).to eq 'new body'
+          end
+
+          it 'appends files to the answer' do
+            patch :update, params: { id: question, question: {
+                files: [ Rack::Test::UploadedFile.new("#{Rails.root}/spec/rails_helper.rb")] }
+            }, format: :js
+            patch :update, params: { id: question, question: {
+                files: [Rack::Test::UploadedFile.new("#{Rails.root}/spec/spec_helper.rb")] }
+            }, format: :js
+
+            expect(question.files.count).to eq 2
           end
 
           it 'renders update view' do
@@ -168,9 +179,9 @@ RSpec.describe QuestionsController, type: :controller do
         end.to_not change(question, :body)
       end
 
-      it 'renders update view with alerts' do
-        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }, format: :js
-        expect(response).to render_template :update
+      it 'redirects to login path' do
+        patch :update, params: { id: question, question: attributes_for(:question, :invalid) }
+        expect(response).to redirect_to new_user_session_path
       end
     end
   end

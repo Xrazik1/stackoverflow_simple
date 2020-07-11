@@ -11,5 +11,9 @@ FactoryBot.define do
     trait :invalid do
       title { nil }
     end
+
+    factory :question_with_files do
+      files { [Rack::Test::UploadedFile.new("#{Rails.root}/spec/rails_helper.rb")] }
+    end
   end
 end

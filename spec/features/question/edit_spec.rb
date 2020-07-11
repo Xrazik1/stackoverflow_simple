@@ -31,7 +31,18 @@ feature 'User can edit his question', "
 
           expect(page).to_not have_content question.body
           expect(page).to have_content 'edited question body'
-          expect(page.find(".edit_question")[:class].include?("hidden")).to be_truthy
+        end
+      end
+
+      scenario "edits question's attached files", js: true do
+        within '.question' do
+          click_on 'Edit'
+
+          attach_file 'Файлы', %W(#{Rails.root}/spec/rails_helper.rb #{Rails.root}/spec/spec_helper.rb)
+          click_on 'Save'
+
+          expect(page).to have_link 'rails_helper.rb'
+          expect(page).to have_link 'spec_helper.rb'
         end
       end
 

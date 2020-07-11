@@ -1,7 +1,17 @@
-div class='jumbotron m-2 bg-primary'
+div class='jumbotron m-2 bg-primary question'
   h2 class='display-5' Вопрос: #{question.title}
   hr class="my-4"
   p #{question.body}
+  - if question.files.attached?
+    .attachments
+      - question.files.each do |file|
+        p= link_to file.filename.to_s, url_for(file)
+
+        - if user&.author_of?(question)
+          = link_to 'Удалить',
+                  attachment_path(file),
+                  method: :delete,
+                  class: 'btn btn-danger'
 
   - if user&.author_of?(question)
     = link_to 'Edit', '#',
@@ -16,4 +26,6 @@ div class='jumbotron m-2 bg-primary'
         = f.text_area :title, id: :question_title, class: 'form-control'
         = f.label :body, 'Question body'
         = f.text_area :body, id: :question_body, class: 'form-control'
+        = f.label :files, 'Файлы'
+        = f.file_field :files, id: :question_files, multiple: true, class: 'form-control'
         = f.submit 'Save'
